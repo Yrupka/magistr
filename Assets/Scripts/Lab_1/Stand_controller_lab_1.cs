@@ -115,6 +115,9 @@ public class Stand_controller_lab_1 : MonoBehaviour
         int index = interpolated_rpms.BinarySearch(rpm_val);
         if (index == -1)
             return info[0];
+            
+        if (index > 0)
+            return info[index];
 
         if (index < 0)
             index = ~index;

@@ -23,28 +23,53 @@ public class Engine_options_lab_2
     public List<struct_rpms> rpms;
 
     public float max_moment;
+    public float max_load;
+
 
     public List<int> Get_list_rpm()
     {
         List<int> list = new List<int>();
-        foreach(struct_rpms rpm in rpms)
-            list.Add(rpm.rpm);
+        foreach(struct_rpms item in rpms)
+            list.Add(item.rpm);
         return list;
     }
 
     public List<float> Get_list_moment()
     {
         List<float> list = new List<float>();
-        foreach (struct_rpms rpm in rpms)
-            list.Add(rpm.moment);
+        foreach (struct_rpms item in rpms)
+            list.Add(item.moment);
         return list;
     }
 
     public List<float> Get_list_consumption()
     {
         List<float> list = new List<float>();
-        foreach (struct_rpms rpm in rpms)
-            list.Add(rpm.consumption);
+        foreach (struct_rpms item in rpms)
+            list.Add(item.consumption);
         return list;
+    }
+
+    public List<float> Get_list_degree()
+    {
+        List<float> list = new List<float>();
+        foreach (struct_rpms item in rpms)
+            list.Add(item.deg);
+        return list;
+    }
+
+    public List<float> Get_list_load()
+    {
+        List<float> list = new List<float>();
+        foreach (struct_rpms item in rpms)
+            list.Add(item.load);
+        return list;
+    }
+
+    // считает и устанавливает максимальные значения для некоторых параметров
+    public void Calculate()
+    {
+        max_moment = UnityEngine.Mathf.Max(Get_list_moment().ToArray());
+        max_load = UnityEngine.Mathf.Max(Get_list_load().ToArray());
     }
 }

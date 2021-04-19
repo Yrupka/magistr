@@ -13,6 +13,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
     private Starter starter;
     private Info_system info_system;
     private Temperature temperature;
+    private Degree degree;
     private Engine_options_lab_2 options;
     private AudioSource sound_source;
     public Fuel_controller fuel_controller;
@@ -42,6 +43,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
         starter.Add_listener_stoped(Engine_stop);
         info_system = transform.Find("Info_system").GetComponent<Info_system>();
         temperature = transform.Find("Temperature").GetComponent<Temperature>();
+        degree = transform.Find("Degree").GetComponent<Degree>();
         temperature.Add_listener_heated(Engine_heat_ready);
         enabled = false; // функция обновления не будет работать
     }
@@ -52,7 +54,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
         {
             if (fuel_weight > 0)
             {
-                float load_procent = rpm_slider.Get_procent() - load_switch.Get_procent();
+                float load_procent = rpm_slider.Get_procent();
                 rpm = (int)Mathf.Lerp(600f, 7000f, load_procent);
                 fuel_weight -= Interpolate(rpm_old, interpolated_consumtions) * temperature.Penalty();
 
@@ -78,25 +80,33 @@ public class Stand_controller_lab_2 : MonoBehaviour
                 Engine_stop();
                 info_system.Fuel(true);
             }
+            rpm_old = (int)Mathf.Lerp(rpm_old, rpm, Time.deltaTime * 3f);
+            degree.Get_degree();
+            //Interpolate(rpm_old);
+            gauge_rpm.Value(rpm_old);
+            gauge_p.Value(1);
+            gauge_load.Value(load_switch.Get_procent() * options.max_load);
         }
-        rpm_old = (int)Mathf.Lerp(rpm_old, rpm, Time.deltaTime * 3f);
-        gauge_rpm.Value(rpm_old);
-        gauge_p.Value(Interpolate(rpm_old, interpolated_moments));
-        gauge_load.Value(load_switch.Get_procent() * options.max_moment / options.lever_length);
     }
 
     private void Setup_values()
     {
-        interpolated_rpms = Calculation_formulas.Interpolated_x(
-                options.Get_list_rpm(), options.interpolation);
-        interpolated_moments = Calculation_formulas.Interpolated_y(
-            options.Get_list_rpm(), options.Get_list_moment(), interpolated_rpms);
-        for (int i = 0; i < interpolated_moments.Count; i++)
-            interpolated_moments[i] /= options.lever_length;
-        interpolated_consumtions = Calculation_formulas.Interpolated_y(
-            options.Get_list_rpm(), options.Get_list_consumption(), interpolated_rpms);
-        for (int i = 0; i < interpolated_consumtions.Count; i++)
-            interpolated_consumtions[i] /= 3600f;
+        // interpolated_rpms = Calculation_formulas.Interpolated_x(
+        //         options.Get_list_rpm(), options.interpolation);
+        // interpolated_moments = Calculation_formulas.Interpolated_y(
+        //     options.Get_list_rpm(), options.Get_list_moment(), interpolated_rpms);
+        // for (int i = 0; i < interpolated_moments.Count; i++)
+        //     interpolated_moments[i] /= options.lever_length;
+        // interpolated_consumtions = Calculation_formulas.Interpolated_y(
+        //     options.Get_list_rpm(), options.Get_list_consumption(), interpolated_rpms);
+        // for (int i = 0; i < interpolated_consumtions.Count; i++)
+        //     interpolated_consumtions[i] /= 3600f;
+
+        // делать интерполяцию для 3 мерного поля?
+        interpolated_rpms = options.Get_list_rpm();
+        interpolated_moments = options.Get_list_moment();
+        interpolated_consumtions = options.Get_list_consumption();
+        interpolated_consumtions.ForEach(x => x /= 3600f);
 
         engine_state = false;
         rpm = 0;
@@ -105,27 +115,55 @@ public class Stand_controller_lab_2 : MonoBehaviour
 
         gauge_rpm.Set_max_value(7000f);
         gauge_p.Set_max_value(options.max_moment / options.lever_length);
-        gauge_load.Set_max_value(options.max_moment / options.lever_length);
+        gauge_load.Set_max_value(options.max_load);
         temperature.Heat_time_set(options.heat_time);
     }
 
-    private float Interpolate(int rpm_val, List<float> info)
+    // нахождение текущего значения момента на основе оборотов и УОЗ
+    private float Interpolate_moment()
     {
-        int index = interpolated_rpms.BinarySearch(rpm_val);
-        if (index == -1)
-            return 0f;
+        float moment = 0f;
+        // шаг 1 - найти процент, на который текущие отсупают от некоторых известных
+        int index = interpolated_rpms.BinarySearch(rpm_old);
+        float procent = 0f;
 
-        float value = 0f;
+        if (!(index > 0 || index == -1))
+        {
+            if (index < 0)
+                index = ~index;
+
+            if (index == interpolated_rpms.Count)
+                index--;
+            procent = Mathf.InverseLerp(
+                interpolated_rpms[index - 1], interpolated_rpms[index], rpm_old);
+        }
+
+        /* шаг 2 - найти значения, как в шаге 1, только для момента;
+        для обоих границ взятых из шага 1, то есть для каждой из 2 точкек оборотов,
+        между которыми будет высчитан процент отступа */
+        float procent_1 = Mathf.Lerp();
+
+        return moment;
+    }
+
+    private float Interpolate(int val, List<float> info)
+    {
+        int index = interpolated_rpms.BinarySearch(val);
+        if (index == -1)
+            return info[0];
+
+        if (index > 0)
+            return info[index];
+
         if (index < 0)
             index = ~index;
-        
+
         if (index == interpolated_rpms.Count)
             index--;
-        
+
         float procent = Mathf.InverseLerp(
-                interpolated_rpms[index - 1], interpolated_rpms[index], rpm_val);
-            value = Mathf.Lerp(info[index - 1], info[index], procent);
-        return value;
+            interpolated_rpms[index - 1], interpolated_rpms[index], val);
+        return Mathf.Lerp(info[index - 1], info[index], procent);
     }
 
     private void Engine_heat_ready() // двигатель нагрет
@@ -203,10 +241,10 @@ public class Stand_controller_lab_2 : MonoBehaviour
 
     private IEnumerator Gauge_zero() // обнуление датчиков со временем
     {
-        while(rpm_old > 0)
+        while (rpm_old > 0)
         {
             gauge_rpm.Value(rpm_old);
-            gauge_p.Value(Interpolate(rpm_old, interpolated_moments) - Mathf.Min(interpolated_moments.ToArray())); 
+            gauge_p.Value(Interpolate(rpm_old, interpolated_moments));
             yield return new WaitForSeconds(0.05f);
             rpm_old -= 25;
         }

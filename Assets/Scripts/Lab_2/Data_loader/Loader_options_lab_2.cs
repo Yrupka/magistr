@@ -48,7 +48,7 @@ public class Loader_options_lab_2 : MonoBehaviour
             return;
         }
         
-        options.max_moment = Mathf.Max(options.Get_list_moment().ToArray());
+        options.Calculate();
 
         stand_controller.Load_options(options);
         fuel_controller.Load_options(options.fuel_amount);
