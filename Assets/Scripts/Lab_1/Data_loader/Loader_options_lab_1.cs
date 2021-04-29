@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
-using System.IO;
 using UnityEngine.UI;
+using System.Runtime.InteropServices;
 
 public class Loader_options_lab_1 : MonoBehaviour
 {
+    [DllImport("__Internal")]
+    private static extern string Get_file_data();
+
     public GameObject window;
     public Stand_controller_lab_1 stand_controller;
     public Fuel_controller fuel_controller;
@@ -19,18 +22,14 @@ public class Loader_options_lab_1 : MonoBehaviour
 
     private void Collect()
     {
+        string data = Get_file_data();
         // получение списка файлов с разрешением json
-        DirectoryInfo info = new DirectoryInfo(Application.dataPath);
-        FileInfo[] fileInfo = info.GetFiles("*.json");
-
-        if (fileInfo.Length == 0)
+        
+        if (data == "error")
         {
             Window("Файл сохранения не найден");
             return;
         }
-            
-        // чтение первого файла из списка
-        string data = File.ReadAllText(fileInfo[0].FullName);
 
         // разделение данных на массив вопросов и данные профиля
         data = data.Remove(data.Length - 1);

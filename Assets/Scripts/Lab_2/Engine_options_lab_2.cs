@@ -26,9 +26,9 @@ public class Engine_options_lab_2
     public float max_load;
 
 
-    public List<int> Get_list_rpm()
+    public List<float> Get_list_rpm()
     {
-        List<int> list = new List<int>();
+        List<float> list = new List<float>();
         foreach(struct_rpms item in rpms)
             list.Add(item.rpm);
         return list;

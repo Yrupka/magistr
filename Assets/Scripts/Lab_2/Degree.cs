@@ -16,7 +16,7 @@ public class Degree : MonoBehaviour
 
     private void Button_1()
     {
-        if (degree > 0)
+        if (degree > -40)
             degree -= 5;
         Info_set(degree);
     }
