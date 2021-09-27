@@ -21,10 +21,9 @@ public class Loader_options_lab_2 : MonoBehaviour
     }
 
     private void Collect()
-    {
+    {        
         string data = Get_file_data();
         // получение списка файлов с разрешением json
-        
         if (data == "error")
         {
             Window("Файл сохранения не найден");
@@ -46,8 +45,6 @@ public class Loader_options_lab_2 : MonoBehaviour
             Window("Ошибка в файле сохранения");
             return;
         }
-        
-        options.Calculate();
 
         stand_controller.Load_options(options);
         fuel_controller.Load_options(options.fuel_amount);

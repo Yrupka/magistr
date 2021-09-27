@@ -19,7 +19,7 @@ public class Stand_controller_lab_1 : MonoBehaviour
     public Animator anim;
     public AudioClip[] engine_sounds;
 
-    private List<int> interpolated_rpms;
+    private List<float> interpolated_rpms;
     private List<float> interpolated_consumtions;
     private List<float> interpolated_moments;
     private bool engine_state;

@@ -28,7 +28,7 @@ public class Gas_tank : Item_highligh
     {
         interactable = false;
         anim.Play("Fuel_add");
-        //sound.Play();
+        sound.Play();
         yield return new WaitForSeconds(3f);
         interactable = true;
     }

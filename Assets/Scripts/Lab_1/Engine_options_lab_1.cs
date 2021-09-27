@@ -6,7 +6,7 @@ public class Engine_options_lab_1
 {
     [Serializable]
     public struct struct_rpms {
-        public int rpm;
+        public float rpm;
         public float moment;
         public float consumption;
     }
@@ -22,9 +22,9 @@ public class Engine_options_lab_1
 
     public float max_moment;
 
-    public List<int> Get_list_rpm()
+    public List<float> Get_list_rpm()
     {
-        List<int> list = new List<int>();
+        List<float> list = new List<float>();
         foreach(struct_rpms rpm in rpms)
             list.Add(rpm.rpm);
         return list;

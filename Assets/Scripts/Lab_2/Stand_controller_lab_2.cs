@@ -10,7 +10,6 @@ public class Stand_controller_lab_2 : MonoBehaviour
         public List<float> moment;
         public List<float> consumption;
         public List<float> degree;
-        public List<float> load;
     }
     private Gauge gauge_rpm;
     private Gauge gauge_p;
@@ -96,62 +95,69 @@ public class Stand_controller_lab_2 : MonoBehaviour
 
     private void Setup_values()
     {
-        // interpolated_rpms = Calculation_formulas.Interpolated_x(
-        //         options.Get_list_rpm(), options.interpolation);
-        // interpolated_moments = Calculation_formulas.Interpolated_y(
-        //     options.Get_list_rpm(), options.Get_list_moment(), interpolated_rpms);
-        // for (int i = 0; i < interpolated_moments.Count; i++)
-        //     interpolated_moments[i] /= options.lever_length;
-        // interpolated_consumtions = Calculation_formulas.Interpolated_y(
-        //     options.Get_list_rpm(), options.Get_list_consumption(), interpolated_rpms);
-        // for (int i = 0; i < interpolated_consumtions.Count; i++)
-        //     interpolated_consumtions[i] /= 3600f;
+        List<float> rpm = new List<float>();
+        List<float> deg = new List<float>();
+        List<float> mom = new List<float>();
+        List<float> cons = new List<float>();
+        //интерполяция
+        // сортировка по оси x
+        (rpm, deg, mom, cons) = Calculation_formulas.Sorting(options.Get_list_rpm(),
+        options.Get_list_degree(), options.Get_list_moment(), options.Get_list_consumption());
 
+        //1. интерполяция по оси z
+        (rpm, deg, cons, mom) = Calculation_formulas.interpolate_3d(rpm, deg, cons, mom, options.interpolation);
 
-        interpolated_rpms = options.Get_list_rpm();
-        interpolated_rpms.Sort(); // на всякий случай, если вносили изменения в файл сохранения
+        // сортировка по оси z
+        (mom, deg, cons, rpm) = Calculation_formulas.Sorting(mom, deg, cons, rpm);
+
+        //2. интерполяция по оси x
+        (mom, deg, cons, rpm) = Calculation_formulas.interpolate_3d(mom, deg, cons, rpm, options.interpolation);
+        
+
+        // 3. сортировка по оборотам
+        (rpm, deg, cons, mom) = Calculation_formulas.Sorting(rpm, deg, cons, mom);
+
+        interpolated_rpms = rpm;
+        options.Set_data(rpm, mom, cons, deg, mom);
+
         var result = interpolated_rpms.GroupBy(
-            x => x,
-            (k, val) => new
-            {
-                Key = k,
-                Count = val.Count()
-            }
-        );
+             x => x,
+             (k, val) => new
+             {
+                 Key = k,
+                 Count = val.Count()
+             }
+         );
 
-        interpolated_items = new List<rpm_items>(result.Count());
+        interpolated_items = new List<rpm_items>();
         int count = 0;
         foreach (var item in result)
         {
             float[] moments = new float[item.Count];
             float[] consumptions = new float[item.Count];
             float[] degrees = new float[item.Count];
-            float[] loads = new float[item.Count];
             for (int i = 0; i < item.Count; i++)
             {
                 moments[i] = options.rpms[count].moment;
-                consumptions[i] = options.rpms[i].consumption / (3600f * 50f);
-                degrees[i] = options.rpms[i].deg;
-                loads[i] = options.rpms[i].load;
+                consumptions[i] = options.rpms[count].consumption / (3600f * 50f);
+                degrees[i] = options.rpms[count].deg;
                 count++;
             }
             // необходимо отсортировать все массивы по порядку на основании градусов
             // только по массиву градусов происходит бинарный поиск
             System.Array.Sort((float[])degrees.Clone(), moments);
-            System.Array.Sort((float[])degrees.Clone(), consumptions);
-            System.Array.Sort(degrees, loads);
+            System.Array.Sort(degrees, consumptions);
 
             rpm_items items = new rpm_items();
             items.moment = new List<float>(moments);
             items.consumption = new List<float>(consumptions);
             items.degree = new List<float>(degrees);
-            items.load = new List<float>(loads);
             interpolated_items.Add(items);
         }
         interpolated_rpms = interpolated_rpms.Distinct().ToList();
         engine_state = false;
-        rpm = 0;
         load_state = false;
+        options.Calculate();
 
         gauge_rpm.Set_max_value(7000f);
         gauge_p.Set_max_value(options.max_moment / options.lever_length);
@@ -178,10 +184,10 @@ public class Stand_controller_lab_2 : MonoBehaviour
         {
             float procent = Mathf.InverseLerp(
                     interpolated_rpms[index - 1], interpolated_rpms[index], rpm);
-            
+
             float moment_2 = Get_value(interpolated_items[index - 1].moment, index - 1);
             moment = Mathf.LerpUnclamped(moment_2, moment_1, procent);
-            
+
             float fuel_2 = Get_value(interpolated_items[index - 1].consumption, index - 1);
             fuel_weight -= Mathf.Lerp(fuel_2, fuel_1, procent) * temperature.Penalty();
         }
@@ -189,7 +195,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
         {
             moment = moment_1;
             fuel_weight -= fuel_1 * temperature.Penalty();
-        }    
+        }
     }
 
     // поиск и интерполяция значения в данном списке на основании значения УОЗ
