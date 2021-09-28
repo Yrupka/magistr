@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 
 public class Loader_options_lab_1 : MonoBehaviour
 {
-    [DllImport("__Internal")]
-    private static extern string Get_file_data();
+    // [DllImport("__Internal")]
+    // private static extern string Get_file_data();
 
     public GameObject window;
     public Stand_controller_lab_1 stand_controller;
@@ -22,7 +22,9 @@ public class Loader_options_lab_1 : MonoBehaviour
 
     private void Collect()
     {
-        string data = Get_file_data();
+        //string data = Get_file_data();
+        //заглушка
+        string data = "{\"engine_name\":\"д\",\"car_name\":\"м\",\"hints\":[\"\",\"\",\"\",\"\"],\"fuel_amount\":10,\"heat_time\":44,\"interpolation\":0,\"lever_length\":1.0,\"max_moment\":9.0,\"rpms\":[{\"rpm\":1000.0,\"moment\":10.0,\"consumption\":11.0,\"deg\":10.0,\"load\":10.0},{\"rpm\":1000.0,\"moment\":20.0,\"consumption\":12.0,\"deg\":20.0,\"load\":20.0},{\"rpm\":1000.0,\"moment\":30.0,\"consumption\":13.0,\"deg\":15.0,\"load\":30.0},{\"rpm\":2000.0,\"moment\":10.0,\"consumption\":14.0,\"deg\":10.0,\"load\":10.0},{\"rpm\":2000.0,\"moment\":20.0,\"consumption\":15.0,\"deg\":15.0,\"load\":20.0},{\"rpm\":2000.0,\"moment\":30.0,\"consumption\":16.0,\"deg\":20.0,\"load\":30.0},{\"rpm\":3000.0,\"moment\":7.0,\"consumption\":17.0,\"deg\":13.0,\"load\":10.0},{\"rpm\":3000.0,\"moment\":8.0,\"consumption\":18.0,\"deg\":30.0,\"load\":20.0},{\"rpm\":3000.0,\"moment\":9.0,\"consumption\":19.0,\"deg\":25.0,\"load\":30.0}],\"questions\":[{\"score\":11,\"num\":0,\"text\":\"аааа\",\"answers\":[\"a\",\"b\",\"c\"]},{\"score\":22,\"num\":0,\"text\":\"fffff\",\"answers\":[\"aa\"]},{\"score\":33,\"num\":-1,\"text\":\"zzzzz\",\"answers\":[]}]}";
         // получение списка файлов с разрешением json
         
         if (data == "error")

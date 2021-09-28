@@ -5,7 +5,6 @@ public class Camera_controller : MonoBehaviour
     public Texture2D cursor_texture;
     public Menu_options options;
     private Vector3 transfer;
-
     private float speed;
     private bool is_locked; // заблокирован ли курсор (нет - перемещение в 2д)
 
@@ -20,7 +19,7 @@ public class Camera_controller : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) 
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             is_locked = false;
             Change_mode(is_locked);
@@ -30,9 +29,9 @@ public class Camera_controller : MonoBehaviour
         {
             is_locked = !is_locked;
             Change_mode(is_locked);
-  
-        } 
-            
+
+        }
+
         if (is_locked) // режим полета в 3д
         {
             // повороты мыши
@@ -49,17 +48,18 @@ public class Camera_controller : MonoBehaviour
 
     public void Change_mode(bool mode)
     {
-        if (mode) 
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Vector2 offset = new Vector2(cursor_texture.width / 2, cursor_texture.height / 2);
-                Cursor.SetCursor(cursor_texture, offset, CursorMode.ForceSoftware);  
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-            }
+        if (mode)
+        {
+            // не перемещает курсор к центру в webgl
+            Cursor.lockState = CursorLockMode.Locked;
+            Vector2 offset = new Vector2(cursor_texture.width / 2, cursor_texture.height / 2);
+            Cursor.SetCursor(cursor_texture, offset, CursorMode.ForceSoftware);
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+        }
     }
 
     public void Set_mouse_speed()

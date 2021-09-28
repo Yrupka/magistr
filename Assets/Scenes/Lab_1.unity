@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2431,6 +2431,7 @@ MonoBehaviour:
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
+  m_ShouldActivateOnSelect: 1
 --- !u!114 &363931510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3910,6 +3911,7 @@ MonoBehaviour:
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
+  m_ShouldActivateOnSelect: 1
 --- !u!114 &588110933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8181,7 +8183,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1650586859}
-  - component: {fileID: 1650586860}
   m_Layer: 0
   m_Name: Connection
   m_TagString: Untagged
@@ -8203,21 +8204,6 @@ Transform:
   m_Father: {fileID: 231513201}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1650586860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1650586858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0dced063139256741a6537434d252bf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  engine_controller: {fileID: 390788726}
-  fuel_controller: {fileID: 554258111}
-  fuel_taken: 0
 --- !u!1 &1653070105
 GameObject:
   m_ObjectHideFlags: 0
