@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+
+[Serializable]
+public class Engine_options_lab_3
+{
+    [Serializable]
+    public struct struct_rpms {
+        public float rpm;
+        public float moment;
+        public float consumption;
+        public float air;
+    }
+
+    public string engine_name;
+    public string car_name;
+    public string[] hints;
+    public int fuel_amount;
+    public int heat_time;
+    public int interpolation;
+    public float lever_length;
+    public List<struct_rpms> rpms;
+
+    public List<float> Get_list_rpm()
+    {
+        List<float> list = new List<float>();
+        foreach(struct_rpms rpm in rpms)
+            list.Add(rpm.rpm);
+        return list;
+    }
+
+    public List<float> Get_list_moment()
+    {
+        List<float> list = new List<float>();
+        foreach (struct_rpms rpm in rpms)
+            list.Add(rpm.moment);
+        return list;
+    }
+
+    public List<float> Get_list_consumption()
+    {
+        List<float> list = new List<float>();
+        foreach (struct_rpms rpm in rpms)
+            list.Add(rpm.consumption);
+        return list;
+    }
+
+    public List<float> Get_list_air()
+    {
+        List<float> list = new List<float>();
+        foreach (struct_rpms rpm in rpms)
+            list.Add(rpm.air);
+        return list;
+    }
+}

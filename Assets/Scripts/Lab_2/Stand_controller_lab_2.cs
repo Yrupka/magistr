@@ -101,8 +101,12 @@ public class Stand_controller_lab_2 : MonoBehaviour
         List<float> cons = new List<float>();
         //интерполяция
         // сортировка по оси x
+        mom = options.Get_list_moment();
+        for (int i = 0; i < mom.Count; i++)
+            mom[i] /= options.lever_length;
+            
         (rpm, deg, mom, cons) = Calculation_formulas.Sorting(options.Get_list_rpm(),
-        options.Get_list_degree(), options.Get_list_moment(), options.Get_list_consumption());
+        options.Get_list_degree(), mom, options.Get_list_consumption());
 
         //1. интерполяция по оси z
         (rpm, deg, cons, mom) = Calculation_formulas.interpolate_3d(rpm, deg, cons, mom, options.interpolation);
@@ -315,6 +319,8 @@ public class Stand_controller_lab_2 : MonoBehaviour
     public void Load_options(Engine_options_lab_2 loaded_options) // получить загруженные данные
     {
         options = loaded_options;
+        transform.Find("Lever_length").Find("Info").GetComponent<TextMesh>().text
+            = options.lever_length.ToString() + "м";
         Setup_values();
         enabled = true;
     }
