@@ -2,13 +2,13 @@
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
 
-public class Loader_options_lab_2 : MonoBehaviour
+public class Loader_options_lab_3 : MonoBehaviour
 {
     // [DllImport("__Internal")]
     // private static extern string Get_file_data();
 
     public GameObject window;
-    public Stand_controller_lab_2 stand_controller;
+    public Stand_controller_lab_3 stand_controller;
     public Fuel_controller fuel_controller;
     public Menu_interactive menu;
 
@@ -21,10 +21,12 @@ public class Loader_options_lab_2 : MonoBehaviour
     }
 
     private void Collect()
-    {        
+    {
         //string data = Get_file_data();
-        string data = "{\"engine_name\":\"д\",\"car_name\":\"м\",\"hints\":[\"\",\"\",\"\",\"\"],\"fuel_amount\":10,\"heat_time\":44,\"interpolation\":0,\"lever_length\":1.2,\"max_moment\":9.0,\"rpms\":[{\"rpm\":1000.0,\"moment\":10.0,\"consumption\":11.0,\"deg\":10.0,\"load\":10.0},{\"rpm\":1000.0,\"moment\":20.0,\"consumption\":12.0,\"deg\":20.0,\"load\":20.0},{\"rpm\":1000.0,\"moment\":30.0,\"consumption\":13.0,\"deg\":15.0,\"load\":30.0},{\"rpm\":2000.0,\"moment\":10.0,\"consumption\":14.0,\"deg\":10.0,\"load\":10.0},{\"rpm\":2000.0,\"moment\":20.0,\"consumption\":15.0,\"deg\":15.0,\"load\":20.0},{\"rpm\":2000.0,\"moment\":30.0,\"consumption\":16.0,\"deg\":20.0,\"load\":30.0},{\"rpm\":3000.0,\"moment\":7.0,\"consumption\":17.0,\"deg\":13.0,\"load\":10.0},{\"rpm\":3000.0,\"moment\":8.0,\"consumption\":18.0,\"deg\":30.0,\"load\":20.0},{\"rpm\":3000.0,\"moment\":9.0,\"consumption\":19.0,\"deg\":25.0,\"load\":30.0}],\"questions\":[{\"score\":11,\"num\":0,\"text\":\"аааа\",\"answers\":[\"a\",\"b\",\"c\"]},{\"score\":22,\"num\":0,\"text\":\"fffff\",\"answers\":[\"aa\"]},{\"score\":33,\"num\":-1,\"text\":\"zzzzz\",\"answers\":[]}]}";
+        //заглушка
+        string data = "{\"engine_name\":\"д\",\"car_name\":\"м\",\"hints\":[\"\",\"\",\"\",\"\"],\"fuel_amount\":10,\"heat_time\":44,\"interpolation\":0,\"lever_length\":1.0,\"max_moment\":9.0,\"rpms\":[{\"rpm\":1000.0,\"moment\":10.0,\"consumption\":11.0,\"air\":10.0},{\"rpm\":2000.0,\"moment\":20.0,\"consumption\":12.0,\"air\":20.0},{\"rpm\":3000.0,\"moment\":30.0,\"consumption\":13.0,\"air\":30.0},{\"rpm\":4000.0,\"moment\":10.0,\"consumption\":14.0,\"air\":40.0},{\"rpm\":5000.0,\"moment\":20.0,\"consumption\":15.0,\"air\":55.0},{\"rpm\":5500.0,\"moment\":30.0,\"consumption\":16.0,\"air\":40.0}],\"questions\":[{\"score\":11,\"num\":0,\"text\":\"аааа\",\"answers\":[\"a\",\"b\",\"c\"]},{\"score\":22,\"num\":0,\"text\":\"fffff\",\"answers\":[\"aa\"]},{\"score\":33,\"num\":-1,\"text\":\"zzzzz\",\"answers\":[]}]}";
         // получение списка файлов с разрешением json
+        
         if (data == "error")
         {
             Window("Файл сохранения не найден");
@@ -34,11 +36,11 @@ public class Loader_options_lab_2 : MonoBehaviour
         // разделение данных на массив вопросов и данные профиля
         data = data.Remove(data.Length - 1);
         string[] data_raw = data.Split(new string[] {",\"questions\":"}, System.StringSplitOptions.None);
-        Engine_options_lab_2 options = new Engine_options_lab_2();
+        Engine_options_lab_3 options = new Engine_options_lab_3();
 
         try
         {
-            options = JsonUtility.FromJson<Engine_options_lab_2>(data_raw[0] + "}");
+            options = JsonUtility.FromJson<Engine_options_lab_3>(data_raw[0] + "}");
             questions = JsonHelper.FromJson<Questions_data>(data_raw[1]);
         }
         catch (System.Exception)

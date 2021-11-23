@@ -7,6 +7,7 @@ public class Fuel_pomp : Item_highligh
     private AudioSource sound;
     private Animator anim;
     private UnityAction click_action;
+    private Transform pomp_name;
 
     private bool work_position;
     private bool interactable;
@@ -15,6 +16,7 @@ public class Fuel_pomp : Item_highligh
     {
         sound = GetComponent<AudioSource>();
         anim = GetComponent<Animator>();
+        pomp_name = transform.Find("Pomp_name");
         work_position = false;
         interactable = true;
     }
@@ -33,7 +35,7 @@ public class Fuel_pomp : Item_highligh
         interactable = true;
     }
 
-        public void Set_state(bool state)
+    public void Set_state(bool state)
     {
         work_position = state;
     }
@@ -51,6 +53,7 @@ public class Fuel_pomp : Item_highligh
             sound.time = 1f;
             sound.pitch = -1;
             sound.Play();
+            pomp_name.Rotate(new Vector3(0, 0, -90)); // поворот надписи
         }
         else
         {
@@ -58,6 +61,7 @@ public class Fuel_pomp : Item_highligh
             sound.time = 0f;
             sound.pitch = 1;
             sound.Play();
+            pomp_name.Rotate(new Vector3(0, 0, 90)); // поворот надписи
         }
 
     }
