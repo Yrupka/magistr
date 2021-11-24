@@ -64,9 +64,9 @@ public static class Calculation_formulas
         if (x.Count == 1)
         {
             interpolated_y.Add(y[0]);
-            goto x;
+            return interpolated_y;
         }
-            
+        // при ситуации когда будут повторы в оборота
         for (int i = 0; i < x_for_calculate.Count - 1; i++)
         {
             if (x_for_calculate[i] == x_for_calculate[i + 1])
@@ -80,7 +80,40 @@ public static class Calculation_formulas
         else
             interpolated_y.Add(Interpolate(x_for_calculate[count], x, y));
 
-        x:
+        return interpolated_y;
+    }
+
+    // удаляет из массива дубликаты, интреполирует, возвращает дубликаты на свои места в результирующий массив
+    public static List<float> Interpolate_dublicate(List<float> x, List<float> y, List<float> x_for_calculate)
+    {
+        // сохранить значения для дублирующих значений оборотов
+        List<float> deleted_dublicate = new List<float>();
+        for (int i = 0; i < x.Count - 1; i++)
+        {
+            if (x[i] == x[i + 1])
+            {
+                // сохраняем удаленные значения
+                deleted_dublicate.Add(y[i + 1]);
+                // удаляем значение из массивов
+                y.RemoveAt(i + 1);
+                x.RemoveAt(i + 1);
+                i--;
+            }
+        }
+
+        // сохранить их индексы, где они находились ранееd
+        List<int> deleted_index = new List<int>();
+        for (int i = 0; i < x_for_calculate.Count - 1; i++)
+            if (x_for_calculate[i] == x_for_calculate[i + 1])
+                deleted_index.Add(i + 1); // сохраняем индекс
+
+        List<float> interpolated_y = Interpolated_y(x, y, x_for_calculate.Distinct().ToList());
+
+        // возвращение повторяющихся значений обратно на свои места
+        for (int i = 0; i < deleted_index.Count; i++)
+        {
+            interpolated_y.Insert(deleted_index[i], deleted_dublicate[i]);
+        }
         return interpolated_y;
     }
 
