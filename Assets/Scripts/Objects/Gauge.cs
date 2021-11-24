@@ -4,7 +4,7 @@ using UnityEngine;
 public class Gauge : MonoBehaviour
 {
     public string value_name;
-
+    
     private const float value_max_angle = -126; // угол максимального значения
     private const float min_value_angle = 126; // угол минимального значения
     private const int label_amount = 7; // количество подписей
@@ -91,7 +91,7 @@ public class Gauge : MonoBehaviour
     public void Set_max_value(float max_val)
     {
         value_max = max_val;
-        Create_labels();
+        Create_labels(); 
         enabled = true;
     }
 }
