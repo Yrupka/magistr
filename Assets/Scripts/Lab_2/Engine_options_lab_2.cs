@@ -10,15 +10,13 @@ public class Engine_options_lab_2
         public float moment;
         public float consumption;
         public float deg;
-        public float load;
 
-        public struct_rpms(float rpm, float moment, float consumption, float deg, float load)
+        public struct_rpms(float rpm, float moment, float consumption, float deg)
         {
             this.rpm = rpm;
             this.moment = moment;
             this.consumption = consumption;
             this.deg = deg;
-            this.load = load;
         }
     }
 
@@ -32,14 +30,13 @@ public class Engine_options_lab_2
     public List<struct_rpms> rpms;
 
     public float max_moment;
-    public float max_load;
 
     public void Set_data(
-        List<float> rpm, List<float> moment, List<float> consumption, List<float> deg, List<float> load)
+        List<float> rpm, List<float> moment, List<float> consumption, List<float> deg)
     {
         rpms.Clear();
         for (int i = 0; i < rpm.Count; i++)
-            rpms.Add(new struct_rpms(rpm[i], moment[i], consumption[i], deg[i], load[i]));
+            rpms.Add(new struct_rpms(rpm[i], moment[i], consumption[i], deg[i]));
     }
 
     public List<float> Get_list_rpm()
@@ -72,20 +69,5 @@ public class Engine_options_lab_2
         foreach (struct_rpms item in rpms)
             list.Add(item.deg);
         return list;
-    }
-
-    public List<float> Get_list_load()
-    {
-        List<float> list = new List<float>();
-        foreach (struct_rpms item in rpms)
-            list.Add(item.load);
-        return list;
-    }
-
-    // считает и устанавливает максимальные значения для некоторых параметров
-    public void Calculate()
-    {
-        max_moment = UnityEngine.Mathf.Max(Get_list_moment().ToArray());
-        max_load = UnityEngine.Mathf.Max(Get_list_load().ToArray());
     }
 }

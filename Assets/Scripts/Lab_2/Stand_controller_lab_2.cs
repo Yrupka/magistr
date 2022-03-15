@@ -32,7 +32,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
     private bool load_state;
 
     // показатели в текущий момент времени
-    private int rpm;
+    private float rpm;
     private float moment;
     private float load;
     private float fuel_weight;
@@ -60,22 +60,23 @@ public class Stand_controller_lab_2 : MonoBehaviour
     {
         if (engine_state)
         {
-            rpm = (int)Mathf.Lerp(600f, 7000f, rpm_slider.Get_procent());
-            load = load_switch.Get_procent() * options.max_load;
+            load = load_switch.Get_procent() * options.max_moment;
+            rpm = (int)Mathf.Lerp(600f, 7000f, rpm_slider.Get_procent() - load_switch.Get_procent());
 
             Interpolate();
+            moment -= load;
 
             sound_source.pitch = rpm / 2000f;
             sound_source.volume = Mathf.InverseLerp(600f, 7000f, rpm) + 0.3f;
             fuel_controller.Fuel_spent(fuel_weight); // обновление количества топлива для весов
             anim.SetFloat("speed", rpm / 700); // установка скорости для анимации
 
-            if (moment < load && !load_state)
+            if (moment <= 0 && !load_state)
             {
                 StartCoroutine(Engine_load_stop());
                 load_state = true;
             }
-            if (moment > load && load_state)
+            if (moment > 0 && load_state)
             {
                 StopCoroutine(Engine_load_stop());
                 load_state = false;
@@ -122,7 +123,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
         (rpm, deg, cons, mom) = Calculation_formulas.Sorting(rpm, deg, cons, mom);
 
         interpolated_rpms = rpm;
-        options.Set_data(rpm, mom, cons, deg, mom);
+        options.Set_data(rpm, mom, cons, deg);
 
         var result = interpolated_rpms.GroupBy(
              x => x,
@@ -143,7 +144,7 @@ public class Stand_controller_lab_2 : MonoBehaviour
             for (int i = 0; i < item.Count; i++)
             {
                 moments[i] = options.rpms[count].moment;
-                consumptions[i] = options.rpms[count].consumption / (3600f * 50f);
+                consumptions[i] = options.rpms[count].consumption / 3000f;
                 degrees[i] = options.rpms[count].deg;
                 count++;
             }
@@ -161,11 +162,11 @@ public class Stand_controller_lab_2 : MonoBehaviour
         interpolated_rpms = interpolated_rpms.Distinct().ToList();
         engine_state = false;
         load_state = false;
-        options.Calculate();
+        options.max_moment = Mathf.Max(mom.ToArray());
 
         gauge_rpm.Set_max_value(7000f);
-        gauge_p.Set_max_value(options.max_moment / options.lever_length);
-        gauge_load.Set_max_value(options.max_load);
+        gauge_p.Set_max_value(options.max_moment);
+        gauge_load.Set_max_value(options.max_moment);
         temperature.Heat_time_set(options.heat_time);
     }
 

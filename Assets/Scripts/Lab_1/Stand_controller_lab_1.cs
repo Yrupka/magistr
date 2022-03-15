@@ -46,12 +46,12 @@ public class Stand_controller_lab_1 : MonoBehaviour
         enabled = false; // функция обновления не будет работать
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (engine_state)
         {
-            rpm = Mathf.Lerp(600f, 7000f, rpm_slider.Get_procent());
             load = load_switch.Get_procent() * options.max_moment;
+            rpm = Mathf.Lerp(600f, 7000f, rpm_slider.Get_procent() - load_switch.Get_procent());
             moment = Interpolate(rpm, interpolated_moments) - load;
             fuel_weight -= Interpolate(rpm, interpolated_consumtions) * temperature.Penalty();
 
@@ -96,7 +96,7 @@ public class Stand_controller_lab_1 : MonoBehaviour
         interpolated_consumtions = Calculation_formulas.Interpolate_dublicate(
             options.Get_list_rpm(), options.Get_list_consumption(), interpolated_rpms);
         for (int i = 0; i < interpolated_consumtions.Count; i++)
-            interpolated_consumtions[i] /= 3600f;
+            interpolated_consumtions[i] /= 3000f;
 
         engine_state = false;
         rpm = 0f;

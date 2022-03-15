@@ -50,7 +50,7 @@ public class Stand_controller_lab_3 : MonoBehaviour
         enabled = false; // функция обновления не будет работать
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (engine_state)
         {
@@ -101,7 +101,7 @@ public class Stand_controller_lab_3 : MonoBehaviour
         interpolated_consumtions = Calculation_formulas.Interpolated_y(
             options.Get_list_rpm(), options.Get_list_consumption(), interpolated_rpms);
         for (int i = 0; i < interpolated_consumtions.Count; i++)
-            interpolated_consumtions[i] /= 3600f;
+            interpolated_consumtions[i] /= 3000f;
         interpolated_air = Calculation_formulas.Interpolated_y(
             options.Get_list_rpm(), options.Get_list_air(), interpolated_rpms);
 

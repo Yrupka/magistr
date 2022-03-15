@@ -17,14 +17,14 @@ public class Degree : MonoBehaviour
     private void Button_1()
     {
         if (degree > -40)
-            degree -= 5;
+            degree--;
         Info_set(degree);
     }
 
     private void Button_2()
     {
         if (degree < 40)
-            degree += 5;
+            degree++;
         Info_set(degree);
     }
 

@@ -29,10 +29,7 @@ public class Questions : MonoBehaviour
     {
         // получить вопросы из объекта с прошлой сцены
         Questions_data[] questions;
-        if (GameObject.Find("Loader_1")) // костыли
-            questions = GameObject.Find("Loader_1").GetComponent<Loader_options_lab_1>().Get_questions();
-        else
-            questions = GameObject.Find("Loader_2").GetComponent<Loader_options_lab_2>().Get_questions();
+        questions = GameObject.Find("Loader").GetComponent<Loader_options>().Get_questions();
 
         questions_list = new List<Question>();
         content = transform.Find("Questions_list").Find("Viewport").Find("Content").gameObject;
